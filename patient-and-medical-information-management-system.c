@@ -1,9 +1,8 @@
 /* =========================================================
    PATIENT AND MEDICAL INFORMATION MANAGEMENT SYSTEM
    -----------------------------------------------------------
-   Roles   : Doctor, Patient, Nurse, Pharmacist
-   Features: Registration, search, view/edit records,
-             prescriptions, role-based report file export
+ * Patient and Medical Information Management System
+ * Role-based system for Doctor, Patient, Nurse, and Pharmacist
    ========================================================= */
 
 #include <stdio.h>
