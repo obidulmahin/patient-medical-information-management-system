@@ -1,40 +1,18 @@
-# Prerequisites
-*.d
+# ==============================
+# Compiled C/C++ files
+# ==============================
+
+# Windows executables
+*.exe
+*.out
 
 # Object files
 *.o
-*.ko
 *.obj
-*.elf
 
-# Linker output
-*.ilk
-*.map
-*.exp
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
+# Static libraries
 *.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+*.lib
 
 # Debug files
 *.dSYM/
@@ -42,14 +20,66 @@
 *.idb
 *.pdb
 
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
 
-# debug information files
-*.dwo
+# ==============================
+# Generated Reports
+# ==============================
+
+# Patient reports
+*_PatientReport.txt
+
+# Medicine reports
+*_MedicineReport.txt
+
+# Other generated text files
+reports/
+
+
+# ==============================
+# IDE / Editor Files
+# ==============================
+
+# Visual Studio Code
+.vscode/
+
+# Visual Studio
+.vs/
+*.vcxproj.user
+
+# Code::Blocks
+*.depend
+*.layout
+
+# CLion / JetBrains
+.idea/
+cmake-build-*/
+
+# Eclipse
+.project
+.cproject
+.settings/
+
+
+# ==============================
+# OS Generated Files
+# ==============================
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# Linux
+*~
+
+
+# ==============================
+# Temporary Files
+# ==============================
+
+*.tmp
+*.temp
+*.log
+*.bak
