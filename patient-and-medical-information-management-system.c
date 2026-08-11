@@ -82,12 +82,14 @@ void printLine(char ch, int count) {
     putchar('\n');
 }
 
-/* Prints text centered within a fixed terminal width (default 80 columns) */
-void printCentered(const char *text, int width) {
+/* Prints text centered horizontally in the terminal (assumes an
+   80-column-wide console, the standard default terminal width) */
+#define CONSOLE_WIDTH 80
+void printCentered(const char *text) {
     int len = (int)strlen(text);
-    int leftPad = (width - len) / 2;
-    if (leftPad < 0) leftPad = 0;
-    for (int i = 0; i < leftPad; i++) putchar(' ');
+    int padding = (CONSOLE_WIDTH - len) / 2;
+    if (padding < 0) padding = 0;
+    for (int i = 0; i < padding; i++) putchar(' ');
     printf("%s\n", text);
 }
 
@@ -213,6 +215,14 @@ void seedPatients() {
 int findPatientIndexByIdOrName(const char *key) {
     for (int i = 0; i < patientCount; i++) {
         if (sameTextCI(patients[i].id, key) || sameTextCI(patients[i].name, key))
+            return i;
+    }
+    return -1;
+}
+
+int findPatientIndexByName(const char *name) {
+    for (int i = 0; i < patientCount; i++) {
+        if (sameTextCI(patients[i].name, name))
             return i;
     }
     return -1;
@@ -506,9 +516,10 @@ void searchPatientDoctor() {
 void doctorMenu() {
     int running = 1;
     while (running) {
-        printf("\n==============================\n");
-        printf("        DOCTOR PORTAL           \n");
-        printf("==============================\n");
+        printf("\n");
+        printCentered("==============================");
+        printCentered("DOCTOR PORTAL");
+        printCentered("==============================");
         printf("1. New Patient\n");
         printf("2. Search Patient by Name or ID\n");
         printf("3. View All Patients\n");
@@ -527,17 +538,20 @@ void doctorMenu() {
 }
 
 void doctorLogin() {
-    printf("\n--- DOCTOR LOGIN ---\n");
+    printf("\n");
+    printCentered("--- DOCTOR LOGIN ---");
     printf("Username: ");
     char name[30], pass[30];
     readLine(name, sizeof(name));
     printf("Password: ");
     readLine(pass, sizeof(pass));
 
-    if (sameTextCI(name, "Dr. Mohammad") && strcmp(pass, "mohammad123") == 0) {
-        doctorMenu();
+    if (!sameTextCI(name, "Dr. Mohammad")) {
+        printf("\nWrong username.\n");
+    } else if (strcmp(pass, "mohammad123") != 0) {
+        printf("\nWrong password.\n");
     } else {
-        printf("\nWrong username or password.\n");
+        doctorMenu();
     }
 }
 
@@ -547,9 +561,10 @@ void doctorLogin() {
 void patientMenu(Patient *p) {
     int running = 1;
     while (running) {
-        printf("\n==============================\n");
-        printf("        PATIENT PORTAL          \n");
-        printf("==============================\n");
+        printf("\n");
+        printCentered("==============================");
+        printCentered("PATIENT PORTAL");
+        printCentered("==============================");
         printf("1. View Medical Information\n");
         printf("2. Logout\n");
         printf("Select option: ");
@@ -579,7 +594,8 @@ void patientMenu(Patient *p) {
 }
 
 void patientLogin() {
-    printf("\n--- PATIENT LOGIN ---\n");
+    printf("\n");
+    printCentered("--- PATIENT LOGIN ---");
     printf("By, Patient Name as Username and Birth Date as Password (DD-MM-YYYY)\n");
     printf("Username: ");
     char name[60], dob[15];
@@ -587,9 +603,15 @@ void patientLogin() {
     printf("Password (DD-MM-YYYY): ");
     readLine(dob, sizeof(dob));
 
+    int nameIdx = findPatientIndexByName(name);
+    if (nameIdx == -1) {
+        printf("\nWrong username.\n");
+        return;
+    }
+
     int idx = findPatientIndexByNameDob(name, dob);
     if (idx == -1) {
-        printf("\nWrong username or password.\n");
+        printf("\nWrong password.\n");
         return;
     }
     patientMenu(&patients[idx]);
@@ -601,9 +623,10 @@ void patientLogin() {
 void nurseMenu(const char *nurseFullLabel, const char *nurseShortLabel) {
     int running = 1;
     while (running) {
-        printf("\n==============================\n");
-        printf("         NURSE PORTAL           \n");
-        printf("==============================\n");
+        printf("\n");
+        printCentered("==============================");
+        printCentered("NURSE PORTAL");
+        printCentered("==============================");
         printf("1. View Assigned Patients\n");
         printf("2. Logout\n");
         printf("Select option: ");
@@ -667,19 +690,28 @@ void nurseMenu(const char *nurseFullLabel, const char *nurseShortLabel) {
 }
 
 void nurseLogin() {
-    printf("\n--- NURSE LOGIN ---\n");
+    printf("\n");
+    printCentered("--- NURSE LOGIN ---");
     printf("Username: ");
     char name[30], pass[30];
     readLine(name, sizeof(name));
     printf("Password: ");
     readLine(pass, sizeof(pass));
 
-    if (sameTextCI(name, "Nurse A") && strcmp(pass, "nursea123") == 0) {
-        nurseMenu("NursA", "Nurse A");
-    } else if (sameTextCI(name, "Nurse B") && strcmp(pass, "nurseb123") == 0) {
-        nurseMenu("NursB", "Nurse B");
+    if (sameTextCI(name, "Nurse A")) {
+        if (strcmp(pass, "nursea123") == 0) {
+            nurseMenu("NursA", "Nurse A");
+        } else {
+            printf("\nWrong password.\n");
+        }
+    } else if (sameTextCI(name, "Nurse B")) {
+        if (strcmp(pass, "nurseb123") == 0) {
+            nurseMenu("NursB", "Nurse B");
+        } else {
+            printf("\nWrong password.\n");
+        }
     } else {
-        printf("\nWrong username or password.\n");
+        printf("\nWrong username.\n");
     }
 }
 
@@ -689,9 +721,10 @@ void nurseLogin() {
 void pharmacistMenu() {
     int running = 1;
     while (running) {
-        printf("\n==============================\n");
-        printf("       PHARMACIST PORTAL        \n");
-        printf("==============================\n");
+        printf("\n");
+        printCentered("==============================");
+        printCentered("PHARMACIST PORTAL");
+        printCentered("==============================");
         printf("1. Search Patient by Patient ID\n");
         printf("2. Logout\n");
         printf("Select option: ");
@@ -746,17 +779,20 @@ void pharmacistMenu() {
 }
 
 void pharmacistLogin() {
-    printf("\n--- PHARMACIST LOGIN ---\n");
+    printf("\n");
+    printCentered("--- PHARMACIST LOGIN ---");
     printf("Username: ");
     char name[30], pass[30];
     readLine(name, sizeof(name));
     printf("Password: ");
     readLine(pass, sizeof(pass));
 
-    if (sameTextCI(name, "Pharmacist A") && strcmp(pass, "pharmacista123") == 0) {
-        pharmacistMenu();
+    if (!sameTextCI(name, "Pharmacist A")) {
+        printf("\nWrong username.\n");
+    } else if (strcmp(pass, "pharmacista123") != 0) {
+        printf("\nWrong password.\n");
     } else {
-        printf("\nWrong username or password.\n");
+        pharmacistMenu();
     }
 }
 
@@ -769,9 +805,9 @@ int main() {
     int running = 1;
     while (running) {
         printf("\n");
-        printCentered("========================================", 80);
-        printCentered("PATIENT AND MEDICAL INFORMATION SYSTEM", 80);
-        printCentered("========================================", 80);
+        printCentered("========================================");
+        printCentered("PATIENT AND MEDICAL INFORMATION SYSTEM");
+        printCentered("========================================");
         printf("1. Doctor Login\n");
         printf("2. Patient Login\n");
         printf("3. Nurse Login\n");
